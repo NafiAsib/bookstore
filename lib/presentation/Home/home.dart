@@ -11,17 +11,20 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: Text('Bookstore'),
+        ),
         body: BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is UnAuthenticated) {
-          // Navigate to the sign in screen when the user Signs Out
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const Signin()),
-            (route) => false,
-          );
-        }
-      },
-      child: Text('Authenticated'),
-    ));
+          listener: (context, state) {
+            if (state is UnAuthenticated) {
+              // Navigate to the sign in screen when the user Signs Out
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const Signin()),
+                (route) => false,
+              );
+            }
+          },
+          child: Text('Authenticated'),
+        ));
   }
 }

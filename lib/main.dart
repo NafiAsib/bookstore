@@ -32,12 +32,21 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Bookstore',
           theme: ThemeData(
+            appBarTheme: const AppBarTheme(
+                backgroundColor: Color(0xFFA5DEE5),
+                elevation: 2,
+                centerTitle: false,
+                titleTextStyle:
+                    TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
             fontFamily: 'WorkSans',
             scaffoldBackgroundColor: const Color(0xFFE4F9F5),
             textTheme: const TextTheme(
               titleLarge: TextStyle(
                 fontSize: 48,
                 fontWeight: FontWeight.w600,
+              ),
+              titleMedium: TextStyle(
+                fontSize: 36,
               ),
             ),
           ),
