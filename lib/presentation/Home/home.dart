@@ -88,6 +88,10 @@ class BookCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final thumbnail = book.volumeInfo?.imageLinks?.thumbnail;
+    final title = book.volumeInfo?.title ?? "No title";
+    final authors = book.volumeInfo?.authors ?? [];
+    final publisher = book.volumeInfo?.publisher ?? "No publisher!";
     return InkWell(
       onTap: () => showModalBottomSheet(
           context: context,
@@ -106,8 +110,8 @@ class BookCard extends StatelessWidget {
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            book.imageLinks?.thumbnail != null
-                ? Image.network(book.imageLinks!.thumbnail!)
+            thumbnail != null
+                ? Image.network(thumbnail)
                 : const Text('no image'),
             const SizedBox(
               width: 10,
@@ -117,16 +121,15 @@ class BookCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    book.title!,
+                    title,
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
 
-                  if (book.authors != null)
-                    ...book.authors!.map<Widget>((author) => Text(author)),
+                  ...authors.map<Widget>((author) => Text(author)),
 
                   const SizedBox(height: 5),
-                  if (book.publisher != null)
-                    Text('Publisher: ${book.publisher!}'),
+
+                  Text('Publisher: $publisher'),
 
                   // state.books[index].authors != null
                   //     ? state.books[index].authors?.map((author) => Text(author))
@@ -150,6 +153,11 @@ class BoolCardBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final thumbnail = book.volumeInfo?.imageLinks?.thumbnail;
+    final title = book.volumeInfo?.title ?? "No title";
+    final authors = book.volumeInfo?.authors ?? [];
+    final publisher = book.volumeInfo?.publisher ?? "No publisher!";
+
     return Container(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -165,9 +173,9 @@ class BoolCardBottomSheet extends StatelessWidget {
                     Icons.favorite,
                     color: const Color(0xFFE84545),
                   ))),
-          book.imageLinks?.thumbnail != null
+          thumbnail != null
               ? Image.network(
-                  book.imageLinks!.thumbnail!,
+                  thumbnail,
                   width: 128,
                   height: 160,
                 )
@@ -184,16 +192,15 @@ class BoolCardBottomSheet extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  book.title!,
+                  title,
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
 
-                if (book.authors != null)
-                  ...book.authors!.map<Widget>((author) => Text(author)),
+                ...authors.map<Widget>((author) => Text(author)),
 
                 const SizedBox(height: 5),
-                if (book.publisher != null)
-                  Text('Publisher: ${book.publisher!}'),
+
+                Text('Publisher: $publisher'),
 
                 // state.books[index].authors != null
                 //     ? state.books[index].authors?.map((author) => Text(author))

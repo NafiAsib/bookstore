@@ -15,11 +15,11 @@ class BooksRepository {
       final decodedResponse = jsonDecode(response.body);
 
       books = (decodedResponse['items'] as List)
-          .map((i) => Book.fromJson(i["volumeInfo"]))
+          .map((i) => Book.fromJson(i))
           .toList();
 
       for (var book in books) {
-        print(book.title);
+        print(book.volumeInfo!.title);
       }
       return books;
     } catch (e) {

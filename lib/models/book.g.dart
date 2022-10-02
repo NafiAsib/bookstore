@@ -7,6 +7,18 @@ part of 'book.dart';
 // **************************************************************************
 
 Book _$BookFromJson(Map<String, dynamic> json) => Book(
+      id: json['id'] as String?,
+      volumeInfo: json['volumeInfo'] == null
+          ? null
+          : VolumeInfo.fromJson(json['volumeInfo'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$BookToJson(Book instance) => <String, dynamic>{
+      'id': instance.id,
+      'volumeInfo': instance.volumeInfo?.toJson(),
+    };
+
+VolumeInfo _$VolumeInfoFromJson(Map<String, dynamic> json) => VolumeInfo(
       title: json['title'] as String?,
       subtitle: json['subtitle'] as String?,
       authors:
@@ -21,12 +33,13 @@ Book _$BookFromJson(Map<String, dynamic> json) => Book(
       canonicalVolumeLink: json['canonicalVolumeLink'] as String?,
     );
 
-Map<String, dynamic> _$BookToJson(Book instance) => <String, dynamic>{
+Map<String, dynamic> _$VolumeInfoToJson(VolumeInfo instance) =>
+    <String, dynamic>{
       'title': instance.title,
       'subtitle': instance.subtitle,
       'authors': instance.authors,
       'publisher': instance.publisher,
-      'imageLinks': instance.imageLinks?.toJson(),
+      'imageLinks': instance.imageLinks,
       'language': instance.language,
       'previewLink': instance.previewLink,
       'infoLink': instance.infoLink,

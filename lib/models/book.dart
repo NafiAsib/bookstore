@@ -4,6 +4,18 @@ part 'book.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Book {
+  final String? id;
+  final VolumeInfo? volumeInfo;
+
+  Book({this.id, this.volumeInfo});
+
+  factory Book.fromJson(Map<String, dynamic> json) => _$BookFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BookToJson(this);
+}
+
+@JsonSerializable()
+class VolumeInfo {
   final String? title;
   final String? subtitle;
   final List<String>? authors;
@@ -14,7 +26,7 @@ class Book {
   final String? infoLink;
   final String? canonicalVolumeLink;
 
-  Book({
+  VolumeInfo({
     this.title,
     this.subtitle,
     this.authors,
@@ -26,9 +38,10 @@ class Book {
     this.canonicalVolumeLink,
   });
 
-  factory Book.fromJson(Map<String, dynamic> json) => _$BookFromJson(json);
+  factory VolumeInfo.fromJson(Map<String, dynamic> json) =>
+      _$VolumeInfoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$BookToJson(this);
+  Map<String, dynamic> toJson() => _$VolumeInfoToJson(this);
 }
 
 @JsonSerializable()
