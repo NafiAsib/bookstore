@@ -1,10 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:bookstore/blocs/favorites/favorites_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:bookstore/blocs/auth/auth_bloc.dart';
 import 'package:bookstore/blocs/books/books_bloc.dart';
-import 'package:bookstore/data/repositories/books_repository.dart';
 import 'package:bookstore/models/book.dart';
 import 'package:bookstore/presentation/Signin/signin.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,57 +15,52 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => BooksBloc(
-        bookRepository: RepositoryProvider.of<BooksRepository>(context),
-      )..add(const LoadBooks()),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Bookstore'),
-          actions: [
-            GestureDetector(
-                onTap: () {
-                  _signOut(context);
-                },
-                child: const Text('Logout'))
-          ],
-        ),
-        body: BlocListener<AuthBloc, AuthState>(
-          listener: (context, state) {
-            if (state is UnAuthenticated) {
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => const Signin()),
-                (route) => false,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Bookstore'),
+        actions: [
+          GestureDetector(
+              onTap: () {
+                _signOut(context);
+              },
+              child: const Text('Logout'))
+        ],
+      ),
+      body: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is UnAuthenticated) {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const Signin()),
+              (route) => false,
+            );
+          }
+        },
+        child: BlocBuilder<BooksBloc, BooksState>(
+          builder: (context, state) {
+            if (state is BooksLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is BooksLoaded) {
+              // print(state.books);
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0, vertical: 10.0),
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: state.books.length,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 10),
+                  itemBuilder: (context, index) {
+                    return BookCard(
+                      book: state.books[index],
+                    );
+                  },
+                ),
               );
+            } else {
+              // print(state);
+              return Container();
             }
           },
-          child: BlocBuilder<BooksBloc, BooksState>(
-            builder: (context, state) {
-              if (state is BooksLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state is BooksLoaded) {
-                // print(state.books);
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 10.0),
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    itemCount: state.books.length,
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 10),
-                    itemBuilder: (context, index) {
-                      return BookCard(
-                        book: state.books[index],
-                      );
-                    },
-                  ),
-                );
-              } else {
-                // print(state);
-                return Container();
-              }
-            },
-          ),
         ),
       ),
     );
@@ -107,7 +102,6 @@ class BookCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             thumbnail != null
@@ -124,16 +118,9 @@ class BookCard extends StatelessWidget {
                     title,
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
-
                   ...authors.map<Widget>((author) => Text(author)),
-
                   const SizedBox(height: 5),
-
                   Text('Publisher: $publisher'),
-
-                  // state.books[index].authors != null
-                  //     ? state.books[index].authors?.map((author) => Text(author))
-                  //     : Container(),
                 ],
               ),
             ),
@@ -165,14 +152,20 @@ class BoolCardBottomSheet extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Align(
-              alignment: Alignment.topRight,
-              child: IconButton(
-                  onPressed: () => Fluttertoast.showToast(
-                      msg: 'Added to favorites!', fontSize: 20),
-                  icon: const Icon(
-                    Icons.favorite,
-                    color: const Color(0xFFE84545),
-                  ))),
+            alignment: Alignment.topRight,
+            child: IconButton(
+              onPressed: () async {
+                BlocProvider.of<FavoritesBloc>(context)
+                    .add(AddFavorite(book: book));
+                Fluttertoast.showToast(
+                    msg: 'Added to favorites!', fontSize: 20);
+              },
+              icon: const Icon(
+                Icons.favorite,
+                color: Color(0xFFE84545),
+              ),
+            ),
+          ),
           thumbnail != null
               ? Image.network(
                   thumbnail,
@@ -195,16 +188,9 @@ class BoolCardBottomSheet extends StatelessWidget {
                   title,
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
-
                 ...authors.map<Widget>((author) => Text(author)),
-
                 const SizedBox(height: 5),
-
                 Text('Publisher: $publisher'),
-
-                // state.books[index].authors != null
-                //     ? state.books[index].authors?.map((author) => Text(author))
-                //     : Container(),
               ],
             ),
           ),

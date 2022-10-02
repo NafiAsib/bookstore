@@ -10,10 +10,17 @@ class FavoritesRepository {
       final docRef =
           FirebaseFirestore.instance.collection('favorites').doc(user?.uid);
 
-      final bookJson = book.toJson();
+      final books = await getFavorites();
+      books.add(book);
+
+      final bookJson = books.map((book) => book.toJson()).toList();
+
+      final favBooks = <String, dynamic>{
+        "books": bookJson,
+      };
 
       await docRef
-          .set(bookJson)
+          .set(favBooks)
           .then((value) {})
           .catchError((error) => print(error));
       return 'Added book to favorites!';
@@ -23,23 +30,25 @@ class FavoritesRepository {
     }
   }
 
-  Future<List<Book>?> getFavorites() async {
+  Future<List<Book>> getFavorites() async {
     try {
       final docFavorites =
-          FirebaseFirestore.instance.collection('lesson').doc(user?.uid);
+          FirebaseFirestore.instance.collection('favorites').doc(user?.uid);
       final snapshot = await docFavorites.get();
-      List<Book> books;
 
       if (snapshot.exists) {
-        print(snapshot.data());
-        //  books = snapshot.data()!.map((i) => Book.fromJson(i))
-        //     .toList();
-        // return Book.fromJson(snapshot.data()!);
+        final booksResponse = snapshot.data()!['books'];
+
+        final List<Book> books = [];
+        booksResponse.forEach(
+            (book) => books.add(Book.fromJson(book as Map<String, dynamic>)));
+        return books;
       } else {
         return [];
       }
     } on Exception catch (e) {
       print(e);
+      return [];
       // return 'Error occured!';
     }
   }

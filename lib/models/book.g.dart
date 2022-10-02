@@ -39,7 +39,7 @@ Map<String, dynamic> _$VolumeInfoToJson(VolumeInfo instance) =>
       'subtitle': instance.subtitle,
       'authors': instance.authors,
       'publisher': instance.publisher,
-      'imageLinks': instance.imageLinks,
+      'imageLinks': instance.imageLinks?.toJson(),
       'language': instance.language,
       'previewLink': instance.previewLink,
       'infoLink': instance.infoLink,

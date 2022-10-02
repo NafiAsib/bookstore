@@ -19,7 +19,16 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
         final books = await favoritesRepository.getFavorites();
         emit(FavoritesLoaded(books: books!));
       } catch (e) {
-        print('Error');
+        emit(FavoritesError(error: e.toString()));
+      }
+    });
+    on<AddFavorite>((event, emit) async {
+      emit(FavoritesLoading());
+      try {
+        final response = await favoritesRepository.addFavorite(event.book);
+        emit(FavoritesAdded());
+      } catch (e) {
+        emit(FavoritesError(error: e.toString()));
       }
     });
   }
