@@ -26,4 +26,28 @@ class BooksRepository {
       throw Exception(e.toString());
     }
   }
+
+  Future<List<Book>?> searchBooks(String searchQuery) async {
+    final queryParams = {
+      'q': searchQuery,
+    };
+    var url =
+        Uri.https('www.googleapis.com', '/books/v1/volumes/', queryParams);
+    List<Book> books;
+    try {
+      final response = await http.get(url);
+      final decodedResponse = jsonDecode(response.body);
+
+      books = (decodedResponse['items'] as List)
+          .map((i) => Book.fromJson(i))
+          .toList();
+
+      for (var book in books) {
+        print(book.volumeInfo!.title);
+      }
+      return books;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }

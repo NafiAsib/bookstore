@@ -62,13 +62,14 @@ class MyApp extends StatelessWidget {
                   TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
           fontFamily: 'WorkSans',
           scaffoldBackgroundColor: const Color(0xFFE4F9F5),
+          primarySwatch: Colors.blueGrey,
           textTheme: const TextTheme(
             titleLarge: TextStyle(
               fontSize: 48,
               fontWeight: FontWeight.w600,
             ),
             titleMedium: TextStyle(
-              fontSize: 36,
+              fontSize: 24,
             ),
             titleSmall: TextStyle(
               fontSize: 18,

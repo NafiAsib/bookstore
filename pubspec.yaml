@@ -45,6 +45,8 @@ dependencies:
   flutter_svg: ^1.1.5
   fluttertoast: ^8.0.9
   cloud_firestore: ^3.5.0
+  keyboard_dismisser: ^3.0.0
+  cached_network_image: ^3.2.2
 
 dev_dependencies:
   flutter_test:

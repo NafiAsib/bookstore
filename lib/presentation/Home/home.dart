@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:bookstore/blocs/favorites/favorites_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:bookstore/blocs/favorites/favorites_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:bookstore/blocs/auth/auth_bloc.dart';
@@ -9,12 +10,15 @@ import 'package:bookstore/models/book.dart';
 import 'package:bookstore/presentation/Signin/signin.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController searchController = TextEditingController();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Bookstore'),
@@ -26,41 +30,122 @@ class Home extends StatelessWidget {
               child: const Text('Logout'))
         ],
       ),
-      body: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-          if (state is UnAuthenticated) {
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const Signin()),
-              (route) => false,
-            );
-          }
-        },
-        child: BlocBuilder<BooksBloc, BooksState>(
-          builder: (context, state) {
-            if (state is BooksLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is BooksLoaded) {
-              // print(state.books);
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0, vertical: 10.0),
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: state.books.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 10),
-                  itemBuilder: (context, index) {
-                    return BookCard(
-                      book: state.books[index],
-                    );
-                  },
-                ),
+      // floatingActionButton: FloatingActionButton(
+      //   // splashColor: Color(0xFF0D7377),
+      //   backgroundColor: Color(0xFF0D7377),
+      //   // splashColor: Color(0xFF0D7377),
+      //   heroTag: 'search',
+      //   onPressed: () {
+      //     Navigator.of(context).push(
+      //       MaterialPageRoute(builder: (context) => const Search()),
+      //     );
+      //     // print('search tapped');
+      //   },
+      //   child: const Icon(
+      //     Icons.search,
+      //   ),
+      // ),
+      body: KeyboardDismisser(
+        gestures: const [
+          GestureType.onVerticalDragDown,
+          GestureType.onTap,
+        ],
+        child: BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is UnAuthenticated) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const Signin()),
+                (route) => false,
               );
-            } else {
-              // print(state);
-              return Container();
             }
           },
+          child: SingleChildScrollView(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 40,
+                          child: TextFormField(
+                            controller: searchController,
+                            decoration: InputDecoration(
+                              suffix: GestureDetector(
+                                onTap: () {
+                                  if (searchController.text.isNotEmpty) {
+                                    searchController.clear();
+                                    context
+                                        .read<BooksBloc>()
+                                        .add(const LoadBooks());
+                                  }
+                                },
+                                child: const Icon(Icons.clear),
+                              ),
+
+                              contentPadding:
+                                  const EdgeInsets.symmetric(horizontal: 5.0),
+                              border: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      style: BorderStyle.solid,
+                                      color: Color(0xFFBDD2B6)),
+                                  borderRadius: BorderRadius.circular(15)
+                                  // gapPadding: 20.0,
+                                  ),
+
+                              // label: Text('ex: flutter'),
+                            ),
+                            textInputAction: TextInputAction.done,
+                            keyboardType: TextInputType.text,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      ElevatedButton(
+                          onPressed: () {
+                            if (searchController.text.isNotEmpty) {
+                              context.read<BooksBloc>().add(SearchBooks(
+                                  searchQuery: searchController.text));
+                            }
+                            // BlocProvider.of<BooksBloc>(context).add(
+                            //   SearchBooks(
+                            //       searchQuery: searchController.text),
+                            // );
+                          },
+                          child: Text('Search'))
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  BlocBuilder<BooksBloc, BooksState>(
+                    builder: (context, state) {
+                      if (state is BooksLoading) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (state is BooksLoaded) {
+                        // print(state.books);
+                        return ListView.separated(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: state.books.length,
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 10),
+                          itemBuilder: (context, index) {
+                            return BookCard(
+                              book: state.books[index],
+                            );
+                          },
+                        );
+                      } else {
+                        // print(state);
+                        return Container();
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -105,8 +190,21 @@ class BookCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             thumbnail != null
-                ? Image.network(thumbnail)
-                : const Text('no image'),
+                ? CachedNetworkImage(
+                    imageUrl: thumbnail,
+                    height: 160,
+                    width: 128,
+                    placeholder: (context, url) => SvgPicture.asset(
+                      'assets/book-placeholder.svg',
+                      width: 128,
+                      height: 160,
+                    ),
+                  )
+                : SvgPicture.asset(
+                    'assets/book-placeholder.svg',
+                    width: 128,
+                    height: 160,
+                  ),
             const SizedBox(
               width: 10,
             ),
@@ -167,10 +265,15 @@ class BoolCardBottomSheet extends StatelessWidget {
             ),
           ),
           thumbnail != null
-              ? Image.network(
-                  thumbnail,
-                  width: 128,
+              ? CachedNetworkImage(
+                  imageUrl: thumbnail,
                   height: 160,
+                  width: 128,
+                  placeholder: (context, url) => SvgPicture.asset(
+                    'assets/book-placeholder.svg',
+                    width: 128,
+                    height: 160,
+                  ),
                 )
               : SvgPicture.asset(
                   'assets/book-placeholder.svg',
