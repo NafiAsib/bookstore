@@ -23,11 +23,20 @@ class Home extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Bookstore'),
         actions: [
-          GestureDetector(
+          InkWell(
               onTap: () {
                 _signOut(context);
               },
-              child: const Text('Logout'))
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: const [
+                    Text('Logout'),
+                    SizedBox(width: 3),
+                    Icon(Icons.logout_rounded),
+                  ],
+                ),
+              ))
         ],
       ),
       // floatingActionButton: FloatingActionButton(
