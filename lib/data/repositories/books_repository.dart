@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class BooksRepository {
-  Future<List<Book>> getBooks() async {
+  Future<List<Book>?> getBooks() async {
     final queryParams = {
       'q': '{http}',
     };

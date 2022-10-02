@@ -13,7 +13,7 @@ class BooksBloc extends Bloc<BooksEvent, BooksState> {
       emit(BooksLoading());
       try {
         final books = await bookRepository.getBooks();
-        emit(BooksLoaded(books: books));
+        emit(BooksLoaded(books: books!));
       } catch (e) {
         emit(BooksError(errorMsg: e.toString()));
       }
