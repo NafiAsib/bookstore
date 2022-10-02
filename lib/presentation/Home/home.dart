@@ -7,21 +7,18 @@ import 'package:bookstore/blocs/books/books_bloc.dart';
 import 'package:bookstore/data/repositories/books_repository.dart';
 import 'package:bookstore/models/book.dart';
 import 'package:bookstore/presentation/Signin/signin.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // final bloc_ref = BlocProvider.of<AuthBloc>(context).stream.listen(
-    //       (event) {
-
-    //       },
-    //     );
     return BlocProvider(
       create: (context) => BooksBloc(
         bookRepository: RepositoryProvider.of<BooksRepository>(context),
-      )..add(LoadBooks()),
+      )..add(const LoadBooks()),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Bookstore'),
@@ -30,13 +27,12 @@ class Home extends StatelessWidget {
                 onTap: () {
                   _signOut(context);
                 },
-                child: Text('Logout'))
+                child: const Text('Logout'))
           ],
         ),
         body: BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is UnAuthenticated) {
-              // Navigate to the sign in screen when the user Signs Out
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => const Signin()),
                 (route) => false,
@@ -54,7 +50,6 @@ class Home extends StatelessWidget {
                       horizontal: 16.0, vertical: 10.0),
                   child: ListView.separated(
                     shrinkWrap: true,
-                    // scrollDirection: Axis.vertical,
                     itemCount: state.books.length,
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 10),
@@ -62,14 +57,6 @@ class Home extends StatelessWidget {
                       return BookCard(
                         book: state.books[index],
                       );
-                      // return Row(
-                      //   children: [
-                      //     state.books[index].imageLinks?.thumbnail != null
-                      //         ? Image.network(
-                      //             state.books[index].imageLinks!.thumbnail!)
-                      //         : Text('no image')
-                      //   ],
-                      // );
                     },
                   ),
                 );
@@ -104,7 +91,7 @@ class BookCard extends StatelessWidget {
     return InkWell(
       onTap: () => showModalBottomSheet(
           context: context,
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
           builder: (context) {
             return BoolCardBottomSheet(book: book);
@@ -121,8 +108,8 @@ class BookCard extends StatelessWidget {
           children: [
             book.imageLinks?.thumbnail != null
                 ? Image.network(book.imageLinks!.thumbnail!)
-                : Text('no image'),
-            SizedBox(
+                : const Text('no image'),
+            const SizedBox(
               width: 10,
             ),
             Expanded(
@@ -169,11 +156,28 @@ class BoolCardBottomSheet extends StatelessWidget {
         // mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Align(
+              alignment: Alignment.topRight,
+              child: IconButton(
+                  onPressed: () => Fluttertoast.showToast(
+                      msg: 'Added to favorites!', fontSize: 20),
+                  icon: const Icon(
+                    Icons.favorite,
+                    color: const Color(0xFFE84545),
+                  ))),
           book.imageLinks?.thumbnail != null
-              ? Image.network(book.imageLinks!.thumbnail!)
-              : Text('no image'),
+              ? Image.network(
+                  book.imageLinks!.thumbnail!,
+                  width: 128,
+                  height: 160,
+                )
+              : SvgPicture.asset(
+                  'assets/book-placeholder.svg',
+                  width: 128,
+                  height: 160,
+                ),
           const SizedBox(
-            width: 10,
+            height: 20,
           ),
           Expanded(
             child: Column(

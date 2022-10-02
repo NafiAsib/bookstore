@@ -5,9 +5,10 @@ import 'dart:convert';
 class BooksRepository {
   Future<List<Book>?> getBooks() async {
     final queryParams = {
-      'q': '{http}',
+      'q': 'flutter',
     };
-    var url = Uri.https('www.googleapis.com', '/books/v1/volumes', queryParams);
+    var url =
+        Uri.https('www.googleapis.com', '/books/v1/volumes/', queryParams);
     List<Book> books;
     try {
       final response = await http.get(url);
