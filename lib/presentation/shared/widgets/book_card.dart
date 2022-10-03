@@ -23,54 +23,60 @@ class BookCard extends StatelessWidget {
     return InkWell(
       onTap: () => showModalBottomSheet(
           context: context,
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
           builder: (context) {
             return BookCardBottomSheet(book: book);
           }),
-      child: Container(
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: const Color(0xFFBAD7DF),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            thumbnail != null
-                ? CachedNetworkImage(
-                    imageUrl: thumbnail,
-                    height: 160,
-                    width: 128,
-                    placeholder: (context, url) => SvgPicture.asset(
+      child: Material(
+        elevation: 5,
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          padding: const EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xffe3fdfd), Color(0xffa5dee5)],
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+            ),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              thumbnail != null
+                  ? CachedNetworkImage(
+                      imageUrl: thumbnail,
+                      height: 160,
+                      width: 128,
+                      placeholder: (context, url) => SvgPicture.asset(
+                        'assets/book-placeholder.svg',
+                        width: 128,
+                        height: 160,
+                      ),
+                    )
+                  : SvgPicture.asset(
                       'assets/book-placeholder.svg',
                       width: 128,
                       height: 160,
                     ),
-                  )
-                : SvgPicture.asset(
-                    'assets/book-placeholder.svg',
-                    width: 128,
-                    height: 160,
-                  ),
-            const SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  ...authors.map<Widget>((author) => Text(author)),
-                  const SizedBox(height: 5),
-                  Text('Publisher: $publisher'),
-                ],
+              const SizedBox(
+                width: 10,
               ),
-            ),
-          ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    ...authors.map<Widget>((author) => Text(author)),
+                    const SizedBox(height: 5),
+                    Text('Publisher: $publisher'),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
