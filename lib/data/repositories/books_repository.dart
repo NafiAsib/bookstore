@@ -17,10 +17,6 @@ class BooksRepository {
       books = (decodedResponse['items'] as List)
           .map((i) => Book.fromJson(i))
           .toList();
-
-      for (var book in books) {
-        print(book.volumeInfo!.title);
-      }
       return books;
     } catch (e) {
       throw Exception(e.toString());
@@ -42,9 +38,6 @@ class BooksRepository {
           .map((i) => Book.fromJson(i))
           .toList();
 
-      for (var book in books) {
-        print(book.volumeInfo!.title);
-      }
       return books;
     } catch (e) {
       throw Exception(e.toString());

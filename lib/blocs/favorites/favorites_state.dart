@@ -18,10 +18,10 @@ class FavoritesLoaded extends FavoritesState {
   List<Object> get props => [books];
 }
 
-class FavoritesAdded extends FavoritesState {
-  final String msg;
+class FavoritesUpdated extends FavoritesState {
+  final String msg; // to notify user if added or removed from favorites
 
-  const FavoritesAdded({required this.msg});
+  const FavoritesUpdated({required this.msg});
   @override
   List<Object> get props => [];
 }

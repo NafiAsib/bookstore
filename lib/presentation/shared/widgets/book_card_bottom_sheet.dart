@@ -23,7 +23,7 @@ class BookCardBottomSheet extends StatelessWidget {
 
     return BlocListener<FavoritesBloc, FavoritesState>(
       listener: (context, state) {
-        if (state is FavoritesAdded) {
+        if (state is FavoritesUpdated) {
           Fluttertoast.showToast(msg: state.msg, fontSize: 20);
         } else if (state is FavoritesError) {
           // print(state.error);
