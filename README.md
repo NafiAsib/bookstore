@@ -2,6 +2,8 @@
 
 Bookstore is a flutter app that uses the [Google Books APIs](https://developers.google.com/books) to show users books and lets them add/remove books from their favorite list. Authetication is handled using [Sign in With Google](https://developers.google.com/identity/gsi/web/guides/overview). Users favorite list is stored in [Firebase Cloud Firestore](https://firebase.google.com/docs/firestore)
 
+Currently the `Add to favorite` & `Remove from favorite` is pretty much ambigous. Pressing on the `Heart` icon of book card checks if the book is already in favorites. Based on that it either removes the book from favorites or add the book in favorites. There's not much of a visual feedback to that. Only a toast is shown. 
+
 ## Getting Started
 
 - clone the git repository `git clone https://github.com/NafiAsib/bookstore.git`
