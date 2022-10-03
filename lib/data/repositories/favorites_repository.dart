@@ -10,9 +10,31 @@ class FavoritesRepository {
       final docRef =
           FirebaseFirestore.instance.collection('favorites').doc(user?.uid);
 
-      final books = await getFavorites();
-      books.add(book);
+      final List<Book> books = [];
+      final favorites = await getFavorites();
 
+      if (favorites != null && favorites.isNotEmpty) {
+        books.addAll(favorites);
+        try {
+          favorites.firstWhere((e) => e.id == book.id);
+          throw Exception('Already added to favorites');
+        } catch (e) {
+          if (e.toString() == 'Exception: Already added to favorites') {
+            final filteredBooks =
+                favorites.where((element) => element.id != book.id).toList();
+
+            removeFavorite(filteredBooks);
+            return 'Removed from favorites';
+          } else {
+            books.add(book);
+          }
+        }
+      } else {
+        books.add(book);
+      }
+
+      // books.add(book);
+      // print('Attemting to add');
       final bookJson = books.map((book) => book.toJson()).toList();
 
       final favBooks = <String, dynamic>{
@@ -22,15 +44,14 @@ class FavoritesRepository {
       await docRef
           .set(favBooks)
           .then((value) {})
-          .catchError((error) => print(error));
-      return 'Added book to favorites!';
+          .catchError((error) => throw Exception(error.toString()));
+      return 'Added book to favorites';
     } on Exception catch (e) {
-      print(e);
-      return 'Error occured!';
+      throw Exception(e.toString());
     }
   }
 
-  Future<List<Book>> getFavorites() async {
+  Future<List<Book>?> getFavorites() async {
     try {
       final docFavorites =
           FirebaseFirestore.instance.collection('favorites').doc(user?.uid);
@@ -47,10 +68,28 @@ class FavoritesRepository {
         return [];
       }
     } on Exception catch (e) {
-      print(e);
-      return [];
-      // return 'Error occured!';
+      throw Exception(e.toString());
     }
   }
-  // Future<string> removeFavorite() {}
+
+  Future<String> removeFavorite(List<Book> books) async {
+    try {
+      final docRef =
+          FirebaseFirestore.instance.collection('favorites').doc(user?.uid);
+
+      final bookJson = books.map((book) => book.toJson()).toList();
+
+      final favBooks = <String, dynamic>{
+        "books": bookJson,
+      };
+
+      await docRef
+          .update(favBooks)
+          .then((value) {})
+          .catchError((error) => throw Exception(error.toString()));
+      return 'Updated favorites';
+    } on Exception catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }

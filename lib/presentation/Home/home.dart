@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:bookstore/presentation/Favorites/favorites.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
@@ -40,9 +41,9 @@ class Home extends StatelessWidget {
         backgroundColor: Color(0xFF0D7377),
         heroTag: 'favorites',
         onPressed: () {
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(builder: (context) => const Search()),
-          // );
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const Favorites()),
+          );
           // print('search tapped');
         },
         child: const Icon(

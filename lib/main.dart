@@ -42,14 +42,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<FavoritesBloc>(
           create: (BuildContext context) => FavoritesBloc(
             favoritesRepository: FavoritesRepository(),
-          ),
+          )..add(const LoadFavorites()),
         ),
-        // RepositoryProvider<AuthRepository>(
-        //     create: (context) => AuthRepository()),
-        // RepositoryProvider<BooksRepository>(
-        //     create: (context) => BooksRepository()),
-        // RepositoryProvider<FavoritesRepository>(
-        //     create: (context) => FavoritesRepository()),
       ],
       child: MaterialApp(
         title: 'Bookstore',

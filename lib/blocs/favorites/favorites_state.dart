@@ -19,6 +19,9 @@ class FavoritesLoaded extends FavoritesState {
 }
 
 class FavoritesAdded extends FavoritesState {
+  final String msg;
+
+  const FavoritesAdded({required this.msg});
   @override
   List<Object> get props => [];
 }

@@ -21,61 +21,69 @@ class BookCardBottomSheet extends StatelessWidget {
     final authors = book.volumeInfo?.authors ?? [];
     final publisher = book.volumeInfo?.publisher ?? "No publisher information";
 
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        // mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Align(
-            alignment: Alignment.topRight,
-            child: IconButton(
-              onPressed: () async {
-                BlocProvider.of<FavoritesBloc>(context)
-                    .add(AddFavorite(book: book));
-                Fluttertoast.showToast(
-                    msg: 'Added to favorites!', fontSize: 20);
-              },
-              icon: const Icon(
-                Icons.favorite,
-                color: Color(0xFFE84545),
+    return BlocListener<FavoritesBloc, FavoritesState>(
+      listener: (context, state) {
+        if (state is FavoritesAdded) {
+          Fluttertoast.showToast(msg: state.msg, fontSize: 20);
+        } else if (state is FavoritesError) {
+          print(state.error);
+          Fluttertoast.showToast(msg: state.error, fontSize: 20);
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Align(
+              alignment: Alignment.topRight,
+              child: IconButton(
+                onPressed: () async {
+                  BlocProvider.of<FavoritesBloc>(context)
+                      .add(AddFavorite(book: book));
+                },
+                icon: const Icon(
+                  Icons.favorite,
+                  color: Color(0xFFE84545),
+                ),
               ),
             ),
-          ),
-          thumbnail != null
-              ? CachedNetworkImage(
-                  imageUrl: thumbnail,
-                  height: 160,
-                  width: 128,
-                  placeholder: (context, url) => SvgPicture.asset(
+            thumbnail != null
+                ? CachedNetworkImage(
+                    imageUrl: thumbnail,
+                    height: 160,
+                    width: 128,
+                    placeholder: (context, url) => SvgPicture.asset(
+                      'assets/book-placeholder.svg',
+                      width: 128,
+                      height: 160,
+                    ),
+                  )
+                : SvgPicture.asset(
                     'assets/book-placeholder.svg',
                     width: 128,
                     height: 160,
                   ),
-                )
-              : SvgPicture.asset(
-                  'assets/book-placeholder.svg',
-                  width: 128,
-                  height: 160,
-                ),
-          const SizedBox(
-            height: 20,
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                ...authors.map<Widget>((author) => Text(author)),
-                const SizedBox(height: 5),
-                Text('Publisher: $publisher'),
-              ],
+            const SizedBox(
+              height: 20,
             ),
-          ),
-        ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  ...authors.map<Widget>((author) => Text(author)),
+                  const SizedBox(height: 5),
+                  Text('Publisher: $publisher'),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
