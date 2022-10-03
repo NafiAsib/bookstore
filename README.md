@@ -1,16 +1,24 @@
-# bookstore
+# Bookstore
 
-A new Flutter project.
+Bookstore is a flutter app that uses the [Google Books APIs](https://developers.google.com/books) to show users books and lets them add/remove in their favorite list. Authetication is handle using [Sign in With Google](https://developers.google.com/identity/gsi/web/guides/overview). Users favorite list is stored in [Firebase Cloud Firestore](https://firebase.google.com/docs/firestore)
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+- clone the git repository `git clone https://github.com/NafiAsib/bookstore.git`
+- cd into the directory `cd bookstore`
+- install dependencies `flutter pub get`
 
-A few resources to get you started if this is your first Flutter project:
+### No splash screen?
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- run `flutter pub run flutter_native_splash:create` to generate splash screen
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### No app icon?
+
+- run `flutter pub run flutter_launcher_icons:main` to generate app icon
+
+This app utilizes [bloc](https://bloclibrary.dev/) to manage states.
+
+### Credits
+
+- Gradients generated using [FLUTTER GRADIENT GENERATOR](https://fluttergradientgenerator.com/)
+- Apps png icon from [Get Free SVG](https://getfreesvg.com/free-floral-book-svg-cut-file-png-dxf-eps-223/)
