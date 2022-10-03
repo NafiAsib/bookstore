@@ -32,12 +32,12 @@ class Signin extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Text(
-                      'Bookstore',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                  ),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      // child: Text(
+                      //   'Bookstore',
+                      //   style: Theme.of(context).textTheme.titleLarge,
+                      // ),
+                      child: Image.asset('assets/bookstore-logo.png')),
                   const SizedBox(height: 60),
                   ElevatedButton(
                     onPressed: () {
