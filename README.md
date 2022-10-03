@@ -26,6 +26,12 @@ This app utilizes [bloc](https://bloclibrary.dev/) to manage states. Typical dat
 - Images are show using [cached_network_image](https://pub.dev/packages/cached_network_image)
 - [keyboard_dismisser](https://pub.dev/packages/keyboard_dismisser) is used to handle unfocusing of keyboard
 
+## Build
+
+```bash
+flutter build apk --release
+```
+
 
 ### Credits
 
