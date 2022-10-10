@@ -38,7 +38,7 @@ class Home extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xFF0D7377),
+        backgroundColor: const Color(0xFF0D7377),
         heroTag: 'favorites',
         onPressed: () {
           Navigator.of(context).push(
@@ -114,7 +114,7 @@ class Home extends StatelessWidget {
                                   searchQuery: searchController.text));
                             }
                           },
-                          child: Text('Search'))
+                          child: const Text('Search'))
                     ],
                   ),
                   const SizedBox(height: 10),

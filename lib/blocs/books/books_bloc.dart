@@ -19,7 +19,6 @@ class BooksBloc extends Bloc<BooksEvent, BooksState> {
       }
     });
     on<SearchBooks>((event, emit) async {
-      print('on event handler');
       emit(BooksLoading());
       try {
         final books = await bookRepository.searchBooks(event.searchQuery);
