@@ -42,7 +42,7 @@ dependencies:
   equatable: ^2.0.5
   http: ^0.13.5
   json_annotation: ^4.4.0
-  flutter_svg: ^1.1.5
+  flutter_svg: ^2.0.3
   fluttertoast: ^8.1.1
   cloud_firestore: ^4.0.3
   keyboard_dismisser: ^3.0.0
